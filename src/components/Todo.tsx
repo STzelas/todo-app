@@ -55,15 +55,18 @@ const Todo = () => {
         <TodoForm dispatch={dispatch} />
         <TodoList todos ={todos} dispatch={dispatch}/>
 
-        { todos.length > 0 ?
-          <div className="text-end mt-4">
-            <button
-              className={"py-2 px-4 bg-cf-dark-red text-white rounded mt-1"}
-              onClick={handleClearAll}>
-              Clear All
-            </button>
-          </div> : null }
-      </div>
+        { todos.length > 0 ? (
+          <>
+            <div className="text-end mt-4">
+              <button
+                className={"py-2 px-4 bg-cf-dark-red text-white rounded mt-1"}
+                onClick={handleClearAll}>
+                Clear All
+              </button>
+            </div>
+          </> ) : null }
+          </div>
+
     </>
   )
 }
