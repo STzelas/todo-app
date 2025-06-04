@@ -39,6 +39,9 @@ const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
 
 const Todo = () => {
   const [todos, dispatch] = useReducer(todoReducer, getInitialTodos());  // εδώ βάζουμε optionally μια function που κανει κάτι που θέλουμε εμείς
+  const totalTasks: number = todos.length
+  const completedTasks: number = todos.filter(todo => todo.completed === true).length
+  const activeTasks = totalTasks - completedTasks;
 
   const handleClearAll = () => {
     dispatch({type: "CLEAR_ALL"});
@@ -57,12 +60,18 @@ const Todo = () => {
 
         { todos.length > 0 ? (
           <>
+            <div className={"flex justify-between border-t pt-2 mt-4 font-semibold text-gray-600"}>
+              <span>Total: {totalTasks}</span>
+              <span>Active: {activeTasks}</span>
+              <span>Completed: {completedTasks}</span>
+            </div>
             <div className="text-end mt-4">
               <button
                 className={"py-2 px-4 bg-cf-dark-red text-white rounded mt-1"}
                 onClick={handleClearAll}>
                 Clear All
               </button>
+              <p className="text-center text-xl font-semibold">{(totalTasks - completedTasks) > 0}</p>
             </div>
           </> ) : null }
           </div>
