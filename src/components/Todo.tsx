@@ -36,7 +36,7 @@ const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
 }
 
 const Todo = () => {
-  const [todos, dispatch] = useReducer(todoReducer, [], getInitialTodos());  // εδώ βάζουμε optionally μια function που κανει κάτι που θέλουμε εμείς
+  const [todos, dispatch] = useReducer(todoReducer, getInitialTodos());  // εδώ βάζουμε optionally μια function που κανει κάτι που θέλουμε εμείς
 
 
 
