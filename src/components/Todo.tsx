@@ -1,10 +1,14 @@
 // toDo: create a function with userReducer
 
 import TodoForm from "./TodoForm.tsx";
-import {useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import TodoList from "./TodoList.tsx";
 import type  {TodoProps, Action} from "../types.ts";
 
+const getInitialTodos = () => {
+  const stored = localStorage.getItem("todos")
+  return stored ? JSON.parse(stored) : [];
+}
 
 const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
   switch (action.type) {
@@ -32,7 +36,14 @@ const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
 }
 
 const Todo = () => {
-  const [todos, dispatch] = useReducer(todoReducer, []);
+  const [todos, dispatch] = useReducer(todoReducer, [], getInitialTodos());  // εδώ βάζουμε optionally μια function που κανει κάτι που θέλουμε εμείς
+
+
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos])
+
   return (
     <>
       <div className={"max-w-sm mx-auto p-6"}>
@@ -40,8 +51,6 @@ const Todo = () => {
         <TodoForm dispatch={dispatch} />
         <TodoList todos ={todos} dispatch={dispatch}/>
       </div>
-
-
     </>
   )
 }
