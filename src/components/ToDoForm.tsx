@@ -1,10 +1,13 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import type {TodoFormProps} from "../types.ts";
 
 
-const todoForm = ({ dispatch }: TodoFormProps) => {
+const ToDoForm = ({ dispatch, inputRef }: TodoFormProps) => {
 
   const [text, setText] = useState("");
+
+  // const inputRef = useRef<HTMLInputElement>(null);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
@@ -15,8 +18,19 @@ const todoForm = ({ dispatch }: TodoFormProps) => {
     if (text.trim() !== "") {
       dispatch({type: "ADD", payload: text})
       setText("")
+      inputRef.current?.focus()
     }
   }
+
+  const handleNoContent = () => {
+    if (text.length === 0)
+      inputRef.current?.focus()
+  }
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
   return (
     <>
       <form
@@ -27,14 +41,19 @@ const todoForm = ({ dispatch }: TodoFormProps) => {
           className={"border p-2 rounded-lg"}
           type="text"
           value={text}
+          ref={inputRef}
           onChange={handleChange}
           placeholder={"New Task..."}/>
         <button
           className={"bg-cf-dark-gray px-4 py-2 rounded text-white "}
-          type={"submit"}>Add</button>
+          type={"submit"}
+          onClick={handleNoContent}
+        >
+          Add
+        </button>
       </form>
     </>
   )
 }
 
-export default todoForm;
+export default ToDoForm;
