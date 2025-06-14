@@ -1,9 +1,9 @@
 import {Trash2, Edit, Save, X, Square, CheckSquare} from "lucide-react"
 import type {TodoListProps} from "../types.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
-const TodoList = ({todos,dispatch}: TodoListProps) => {
+const TodoList = ({todos, dispatch, editInputRef, inputRef}: TodoListProps) => {
   const [editId, setEditId] = useState<number | null>(null)
   const [editText, setEditText] = useState("")
 
@@ -14,11 +14,13 @@ const TodoList = ({todos,dispatch}: TodoListProps) => {
   const handleEdit = (id: number, text:string) => () => {
     setEditId(id)
     setEditText(text)
+    editInputRef.current?.focus()
   }
 
   const handleCancel = () => {
     setEditId(null)
     setEditText("")
+    inputRef.current?.focus()
   }
 
   const handleSave = (id: number) => () => {
@@ -30,6 +32,10 @@ const TodoList = ({todos,dispatch}: TodoListProps) => {
   const handleToggle = (id: number) => () => {
     dispatch({type: "COMPLETE", payload: id})
   }
+
+  useEffect(() => {
+    editInputRef.current?.focus()
+  })
 
   return (
     <>
@@ -48,7 +54,9 @@ const TodoList = ({todos,dispatch}: TodoListProps) => {
                       className={"border rounded p-1"}
                       type="text"
                       value={editText}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditText(e.target.value)}/>
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditText(e.target.value)}
+                      ref={editInputRef}
+                    />
                   </div>
                   <div className={"flex gap-2"}>
                     <button
