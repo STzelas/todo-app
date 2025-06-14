@@ -1,7 +1,5 @@
-// toDo: create a function with userReducer
-
-import TodoForm from "./TodoForm.tsx";
-import {useEffect, useReducer} from "react";
+import TodoForm from "./ToDoForm.tsx";
+import {useEffect, useReducer, useRef} from "react";
 import TodoList from "./TodoList.tsx";
 import type  {TodoProps, Action} from "../types.ts";
 
@@ -39,24 +37,33 @@ const todoReducer = (state: TodoProps[], action: Action): TodoProps[] => {
 
 const Todo = () => {
   const [todos, dispatch] = useReducer(todoReducer, getInitialTodos());  // εδώ βάζουμε optionally μια function που κανει κάτι που θέλουμε εμείς
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
+
   const totalTasks: number = todos.length
   const completedTasks: number = todos.filter(todo => todo.completed === true).length
   const activeTasks = totalTasks - completedTasks;
 
   const handleClearAll = () => {
     dispatch({type: "CLEAR_ALL"});
+    inputRef.current?.focus();
   }
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos])
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  })
+
   return (
     <>
       <div className={"max-w-sm mx-auto p-6"}>
         <h1 className={"text-center text-xl font-semibold"}>To-Do List</h1>
-        <TodoForm dispatch={dispatch} />
-        <TodoList todos ={todos} dispatch={dispatch}/>
+        <TodoForm dispatch={dispatch} inputRef={inputRef}/>
+        <TodoList todos={todos} dispatch={dispatch} editInputRef={editInputRef} inputRef={inputRef}/>
 
         { todos.length > 0 ? (
           <>
@@ -68,7 +75,8 @@ const Todo = () => {
             <div className="text-end mt-4">
               <button
                 className={"py-2 px-4 bg-cf-dark-red text-white rounded mt-1"}
-                onClick={handleClearAll}>
+                onClick={handleClearAll}
+              >
                 Clear All
               </button>
               <p className="text-center text-xl font-semibold">{(totalTasks - completedTasks) > 0}</p>
